@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SYUUSAI | Architectural Narrative</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;500;800&family=Zen+Kaku+Gothic+New:wght@300;500;700&display=swap');
+
+        :root {
+            --bg-color: #f5f5f3; /* decoa風の温かみのある白 */
+            --line-color: #1a1a1a;
+            --text-grey: #888;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--line-color);
+            font-family: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* スムーススクロール用ラッパー */
+        #smooth-wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* ヘッダー：ミニマルに */
+        header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 100;
+            pointer-events: none; /* 下の要素をクリック可能に */
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+            pointer-events: auto;
+        }
+
+        .nav-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        .nav-line {
+            width: 40px; height: 1px; background: var(--line-color);
+            transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1);
+        }
+        .nav-lines:hover .nav-line:nth-child(1) { transform: scaleX(1.2); }
+        .nav-lines:hover .nav-line:nth-child(2) { transform: scaleX(0.8); }
+
+        /* ファーストビュー */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* 背景のSVGラインアート */
+        .bg-art {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vh;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        
+        path {
+            fill: none;
+            stroke: var(--line-color);
+            stroke-width: 0.5;
+            vector-effect: non-scaling-stroke;
+        }
+
+        /* メインコピー */
+        .hero-text {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 6vw;
+            line-height: 1;
+            font-weight: 200; /* 細く大きく */
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+        
+        h1 strong {
+            font-weight: 500;
+            display: block;
+        }
+
+        .sub-text {
+            margin-top: 2rem;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            color: var(--text-grey);
+        }
+
+        /* コンテンツセクション */
+        .section {
+            padding: 10rem 5rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 10rem;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(0,0,0,0.1); /* 文字の縁取り */
+            position: absolute;
+            top: -4rem;
+            left: -2rem;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .text-area h2 {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        /* 線画イラストエリア */
+        .line-illustration {
+            width: 100%;
+            height: 400px;
+            border: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        /* 丸いボタン (decoa風) */
+        .circle-btn {
+            width: 120px; height: 120px;
+            border: 1px solid var(--line-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .circle-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--line-color);
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: -1;
+        }
+        
+        .circle-btn:hover {
+            color: #fff;
+            transform: scale(1.1);
+        }
+        
+        .circle-btn:hover::before {
+            transform: scale(1);
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="smooth-wrapper">
+    <header>
+        <div class="logo">SYUUSAI</div>
+        <div class="nav-lines">
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <svg class="bg-art" viewBox="0 0 800 600">
+            <path class="draw-path" d="M100,300 C100,100 300,100 300,300 S500,500 500,300 S700,100 700,300" />
+            <circle class="draw-path" cx="400" cy="300" r="150" />
+            <rect class="draw-path" x="250" y="150" width="300" height="300" transform="rotate(45 400 300)" />
+        </svg>
+
+        <div class="hero-text">
+            <h1>Design the<br><strong>Story.</strong></h1>
+            <div class="sub-text">ストーリーをデザインする</div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">PHILOSOPHY</div>
+        <div class="content-grid">
+            <div class="text-area">
+                <h2>逆算から、<br>正解を導く。</h2>
+                <p style="line-height: 2; color: #555;">
+                    美しいだけのWebサイトは作りません。<br>
+                    ゴール地点から逆算された論理的な設計図。<br>
+                    そこに、人の心を動かすストーリーを乗せる。<br>
+                    それがSYUUSAIのデザインです。
+                </p>
+                <div class="circle-btn">VIEW MORE</div>
+            </div>
+            <div class="line-illustration" id="illustration-target">
+                <svg width="200" height="200" viewBox="0 0 200 200">
+                    <rect x="50" y="50" width="100" height="100" fill="none" stroke="#111" stroke-width="1" class="anim-rect" />
+                    <line x1="100" y1="50" x2="100" y2="150" stroke="#111" stroke-width="1" class="anim-line" />
+                    <line x1="50" y1="100" x2="150" y2="100" stroke="#111" stroke-width="1" class="anim-line" />
+                </svg>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1. SVGの描画アニメーション（ロード時）
+    const paths = document.querySelectorAll('.draw-path');
+    
+    paths.forEach((path, i) => {
+        const length = path.getTotalLength();
+        
+        // 初期設定：線を消す
+        gsap.set(path, {
+            strokeDasharray: length,
+            strokeDashoffset: length,
+            opacity: 0
+        });
+
+        // アニメーション
+        gsap.to(path, {
+            strokeDashoffset: 0,
+            opacity: 1,
+            duration: 2.5,
+            ease: "power2.out",
+            delay: i * 0.2 // 順番に描画
+        });
+        
+        // 常にゆっくり動かす（浮遊感）
+        gsap.to(path, {
+            rotation: 10,
+            transformOrigin: "center center",
+            duration: 5,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut"
+        });
+    });
+
+    // 2. テキストの視差効果（スクロール連動）
+    gsap.to(".hero-text", {
+        y: 200, // 下に移動
+        opacity: 0,
+        scrollTrigger: {
+            trigger: ".hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: true
+        }
+    });
+
+    // 3. Philosophyセクションの線画アニメーション（スクロール検知）
+    gsap.from(".anim-rect, .anim-line", {
+        scale: 0,
+        transformOrigin: "center",
+        strokeDasharray: 200,
+        strokeDashoffset: 200,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: "power4.out",
+        scrollTrigger: {
+            trigger: "#illustration-target",
+            start: "top 80%", // 画面の80%に来たら発火
+        }
+    });
+
+</script>
+</body>
+</html>
