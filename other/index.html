@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>株式会社SYUUSAI | Web Production & Produce</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@500;700;900&display=swap');
+
+        :root {
+            --bg-color: #F5F7F9;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* 背景グリッド */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(var(--text-muted) 1px, transparent 1px),
+                linear-gradient(90deg, var(--text-muted) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.02;
+            z-index: -1;
+        }
+
+        header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: 0.05em;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .logo-mark { width: 14px; height: 14px; background: var(--text-main); border-radius: 2px; }
+
+        .header-nav { font-size: 0.85rem; font-weight: 600; display: flex; gap: 2rem; letter-spacing: 0.05em; }
+        .header-nav span { cursor: pointer; position: relative; }
+        .header-nav span::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 1px;
+            background: var(--text-main); transform: scaleX(0); transform-origin: right; transition: transform 0.3s;
+        }
+        .header-nav span:hover::after { transform: scaleX(1); transform-origin: left; }
+
+        .hero {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: center;
+            padding: 0 4rem;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-text { z-index: 10; padding-right: 2rem; pointer-events: none; }
+        .hero-text > * { pointer-events: auto; }
+
+        /* フォント統一・調整部分 */
+        h1 {
+            font-family: 'Noto Sans JP', sans-serif; /* ゴシックで統一 */
+            font-weight: 900; /* 太くして力強さを出す */
+            font-size: 5.5vw;
+            line-height: 1.2;
+            margin: 0 0 2.5rem 0;
+            color: var(--text-main);
+            letter-spacing: -0.03em; /* 少し詰めて塊感を出す */
+        }
+
+        .sub-copy {
+            font-size: 1.1rem; font-weight: 500; line-height: 1.8; color: var(--text-main);
+            margin-bottom: 3rem; padding-left: 1.5rem; border-left: 2px solid var(--text-main); letter-spacing: 0.05em;
+        }
+
+        .tag-list { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .tag {
+            font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600;
+            padding: 0.5rem 1.2rem; border: 1px solid #D1D5DB; border-radius: 50px;
+            background: #fff; color: var(--text-muted); transition: all 0.3s;
+        }
+        .tag:hover { border-color: var(--text-main); color: var(--text-main); }
+
+        .hero-visual {
+            position: absolute;
+            top: 0; right: 0;
+            width: 60%;
+            height: 100%;
+            z-index: 1;
+            mask-image: linear-gradient(to right, transparent 0%, black 40%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
+        }
+
+        canvas#webgl-canvas { width: 100%; height: 100%; display: block; }
+
+        .scroll-indicator {
+            position: absolute; bottom: 3rem; left: 4rem;
+            font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600;
+            letter-spacing: 0.1em; display: flex; align-items: center; gap: 1rem;
+            z-index: 10;
+        }
+        .scroll-bar { width: 0; height: 1px; background: var(--text-main); }
+
+    </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<header>
+    <div class="logo">
+        <div class="logo-mark"></div>
+        SYUUSAI Inc.
+    </div>
+    <nav class="header-nav">
+        <span>SERVICE</span>
+        <span>WORKS</span>
+        <span>COMPANY</span>
+        <span>CONTACT</span>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-text">
+        <h1>
+            <span class="text-reveal">ストーリーを</span><br>
+            <span class="text-reveal">デザインする。</span>
+        </h1>
+        
+        <div class="sub-copy-wrapper">
+            <p class="sub-copy">
+                貴社をプロデュースする<br>
+                WEB制作会社です
+            </p>
+        </div>
+
+        <div class="tag-list">
+            <div class="tag">Web Strategy</div>
+            <div class="tag">UI/UX Design</div>
+            <div class="tag">Project Management</div>
+        </div>
+    </div>
+
+    <div class="hero-visual">
+        <canvas id="webgl-canvas"></canvas>
+    </div>
+
+    <div class="scroll-indicator">
+        <div class="scroll-bar"></div>
+        SCROLL TO EXPLORE
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+    // GSAP Animations
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    
+    tl.from(".text-reveal", { y: 30, opacity: 0, duration: 1, stagger: 0.2, delay: 0.5 });
+    tl.from(".sub-copy", { x: -20, opacity: 0, duration: 0.8 }, "-=0.8");
+    tl.from(".tag", { scale: 0.9, opacity: 0, duration: 0.5, stagger: 0.1 }, "-=0.5");
+    tl.to(".scroll-bar", { width: 50, duration: 1 }, "-=0.5");
+
+    // Three.js Particle Flow
+    const canvas = document.getElementById('webgl-canvas');
+    const scene = new THREE.Scene();
+    
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth * 0.6 / window.innerHeight, 0.1, 1000);
+    camera.position.z = 100;
+    camera.position.y = 20;
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth * 0.6, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    const count = 2500; // 粒子の数を少し増やして密度アップ
+    
+    const positions = new Float32Array(count * 3);
+    const scales = new Float32Array(count);
+
+    for(let i = 0; i < count; i++) {
+        const i3 = i * 3;
+        positions[i3] = (Math.random() - 0.5) * 160;
+        positions[i3 + 1] = (Math.random() - 0.5) * 60;
+        positions[i3 + 2] = (Math.random() - 0.5) * 160;
+        scales[i] = Math.random();
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particlesGeometry.setAttribute('scale', new THREE.BufferAttribute(scales, 1));
+
+    const particlesMaterial = new THREE.PointsMaterial({
+        color: 0x1F2937,
+        size: 0.7, // 少し小さくして上品に
+        sizeAttenuation: true,
+        transparent: true,
+        opacity: 0.7
+    });
+
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
+
+    const clock = new THREE.Clock();
+
+    const tick = () => {
+        const elapsedTime = clock.getElapsedTime();
+
+        for(let i = 0; i < count; i++) {
+            const i3 = i * 3;
+            const x = particlesGeometry.attributes.position.array[i3];
+            const z = particlesGeometry.attributes.position.array[i3 + 2];
+            
+            particlesGeometry.attributes.position.array[i3 + 1] = 
+                Math.sin(elapsedTime * 0.4 + x * 0.05) * 6 + 
+                Math.sin(elapsedTime * 0.2 + z * 0.05) * 6;
+        }
+        
+        particlesGeometry.attributes.position.needsUpdate = true;
+        particles.rotation.y = elapsedTime * 0.08; // 回転速度調整
+
+        renderer.render(scene, camera);
+        window.requestAnimationFrame(tick);
+    }
+
+    tick();
+
+    window.addEventListener('resize', () => {
+        const container = document.querySelector('.hero-visual');
+        if(container){
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+    });
+
+    document.addEventListener('mousemove', (event) => {
+        const mouseX = event.clientX / window.innerWidth - 0.5;
+        const mouseY = event.clientY / window.innerHeight - 0.5;
+        
+        gsap.to(particles.rotation, {
+            x: mouseY * 0.15,
+            z: mouseX * 0.15,
+            duration: 1
+        });
+    });
+
+</script>
+</body>
+</html>
